@@ -1,7 +1,7 @@
 {
 	"name": "Close Similar Tabs",
 	"version": "0.2",
-	"manifest_version": 2,
+	"manifest_version": 3,
 	"description": "Closes the tabs that have the same host as the selected one.",
 	"icons": {
 		"16": "icon_16.png",
@@ -11,12 +11,9 @@
 		"tabs"
 	],
 	"background": {
-		"persistent": false,
-		"scripts": [
-			"similartabs.js"
-		]
+		"service_worker": "similartabs.js"
 	},
-	"browser_action": {
+	"action": {
 		"default_title": "Close Similar Tabs"
 	}
 }

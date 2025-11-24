@@ -26,10 +26,10 @@ function getHost(url) {
  * @param {Function} successHandler
  */
 function getCurrentTab(successHandler) {
-    chrome.windows.getCurrent(function (win) {
-        chrome.tabs.getSelected(win.id, function (tab) {
-            successHandler(tab);
-        });
+    chrome.tabs.query({active: true, currentWindow: true}, function (tabs) {
+        if (tabs.length > 0) {
+            successHandler(tabs[0]);
+        }
     });
 }
 
@@ -40,16 +40,13 @@ function getCurrentTab(successHandler) {
  * @param {Function} successHandler
  */
 function getTabs(host, successHandler) {
-
-    chrome.windows.getCurrent(function (win) {
-        chrome.tabs.getAllInWindow(win.id, function (tabs) {
-            var result = tabs.filter(function (tab, index, array) {
-                var tabhost = getHost(tab.url);
-                return tabhost == host;
-            });
-
-            successHandler(result);
+    chrome.tabs.query({currentWindow: true}, function (tabs) {
+        var result = tabs.filter(function (tab, index, array) {
+            var tabhost = getHost(tab.url);
+            return tabhost == host;
         });
+
+        successHandler(result);
     });
 }
 
@@ -73,7 +70,7 @@ function closeSimilarTabs() {
 }
 
 function init() {
-    chrome.browserAction.onClicked.addListener(function (tab) {
+    chrome.action.onClicked.addListener(function (tab) {
         closeSimilarTabs();
     });
 }
